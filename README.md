@@ -13,6 +13,10 @@ To test the app, do the following:
 Planetsino also contains functionality to do performance testing on your Azure Cosmos DB accounts.
 
 
+# More reading
+Visit [my blog](https://www.johanahlen.info/en/tag/azure-cosmos-db/) for more reading about Azure Cosmos DB
+
+
 # Screenshots
 ![Planetsino screenshot 1](/SCREENSHOT1.png?raw=true "Planetsino screenshot 1")
 ![Planetsino screenshot 2](/SCREENSHOT2.png?raw=true "Planetsino screenshot 2")
