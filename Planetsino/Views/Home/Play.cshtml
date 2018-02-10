@@ -1,0 +1,59 @@
+﻿@model Planetsino.Models.Player
+@{
+    ViewBag.Title = "Play";
+}
+<br />
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-info">
+        @Html.Raw(ViewBag.Message)
+    </div>
+}
+
+<p>
+    <img src="~/Images/piggy-bank-1056615.jpg" class="img-responsive" style="width: 200px;" />
+</p>
+
+@using (Html.BeginForm())
+{
+    @Html.Hidden("playerGuid", Model.PlayerGuid)
+    @Html.Hidden("clientName", Model.ClientName)
+    <p>Your score: @Model.PlayerScore</p>
+    <p>Computer score: @Model.ComputerScore</p>
+    if (ViewBag.Coins != null)
+    {
+        <p>Last toss:</p>
+        <p>
+            @foreach (var coin in ViewBag.Coins)
+            {
+                <img src="~/Images/coin@(coin).jpg" style="width: 100px;" />
+            }
+        </p>
+    }
+
+    if (ViewBag.GameOver != null && ViewBag.GameOver == true)
+    {
+        <p>
+            @if (Model.Balance >= 20)
+            {
+                @Html.ActionLink("New game", "Play", new { @Model.PlayerGuid }, new { @class = "btn btn-info" })
+            }
+            @Html.ActionLink("End", "Account", new { @Model.PlayerGuid }, new { @class = "btn btn-danger" })
+        </p>
+    }
+    else
+    {
+        <p>Pot: @Model.Pot</p>
+        <p>
+            <button type="submit" name="button" value="toss" class="btn btn-success">Toss</button>
+            <button type="submit" name="button" value="call" class="btn btn-danger">Call</button>
+        </p>
+        <h3>Rules</h3>
+        <p>Chose between Toss and Call</p>
+        <ul>
+            <li>Toss three coins and count the number of heads. 0 heads means you lose your turn. Otherwise the pot increases with the number of heads.</li>
+            <li>If you Call, the pot will be added to your score.</li>
+        </ul>
+        <p>Compete against the computer. First to reach 25 points wins.</p>
+    }
+}

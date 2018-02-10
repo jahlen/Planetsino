@@ -1,0 +1,34 @@
+﻿@model Planetsino.Models.Player
+@{
+    ViewBag.Title = "Play";
+}
+<br />
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-info">
+        @Html.Raw(ViewBag.Message)
+    </div>
+}
+
+<p>
+    <img src="~/Images/money-2180330_640.jpg" class="img-responsive" style="width: 400px;" />
+</p>
+
+@using (Html.BeginForm())
+{
+    @Html.Hidden("playerGuid", Model.PlayerGuid)
+    @Html.Hidden("clientName", Model.ClientName)
+    <p>Your balance: $@Model.Balance</p>
+    <p>
+        <button type="submit" name="button" value="deposit" class="btn btn-success">Deposit $100</button>
+        <button type="submit" name="button" value="withdraw" class="btn btn-danger">Widthdraw $100</button>
+    </p>
+
+    <h3>Start new round</h3>
+    <p>
+        You will need at least 20 in balance to start a new round.
+    </p>
+    <p>
+        <button type="submit" name="button" value="start" class="btn btn-info">Start game</button>
+    </p>
+}

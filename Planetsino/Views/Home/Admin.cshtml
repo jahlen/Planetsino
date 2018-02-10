@@ -1,0 +1,45 @@
+﻿@model Planetsino.Models.Player[]
+@{
+    ViewBag.Title = "Admin";
+}
+<br />
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-info">
+        @Html.Raw(ViewBag.Message)
+    </div>
+}
+
+<p>
+    <img src="~/Images/money-2180330_640.jpg" class="img-responsive" style="width: 400px;" />
+</p>
+
+@using (Html.BeginForm())
+{
+    <h3>List players</h3>
+    <p>
+        Minimum Balance: @Html.TextBox("minBalance", "200", new { width = "100px" })
+        <button type="submit" name="button" value="bet" class="btn btn-success">Search</button>
+    </p>
+}
+
+@if (Model != null)
+{
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Player Id</th>
+                <th>Server</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="@Url.Action("Account", new { item.PlayerGuid })">&#128270;</a> @item.PlayerGuid</td>
+                <td>@item.ClientName</td>
+                <td>@item.Balance</td>
+            </tr>
+        }
+    </table>
+}
