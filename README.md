@@ -9,3 +9,10 @@ To test the app, do the following:
 * Test run the web app locally in Visual Studio. That will help you resolve any configuration errors.
 * Publish the web app to Azure. If you have co-located your Azure Cosmos DB accounts with the Web Apps, you should get very low latency.
 * Finally, you can add an Azure Traffic Manager to automatically direct users to the nearest Web App.
+
+Planetsino also contains functionality to do performance testing on your Azure Cosmos DB accounts.
+
+
+# Screenshots
+![Planetsino screenshot 1](/SCREENSHOT1.png?raw=true "Planetsino screenshot 1")
+![Planetsino screenshot 2](/SCREENSHOT2.png?raw=true "Planetsino screenshot 2")
