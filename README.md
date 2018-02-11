@@ -3,6 +3,8 @@ A sample app using Azure Cosmos DB.
 
 This app demonstrates how to build a web app that uses a globally distributed Azure Cosmos DB setup. Combined with the Azure Traffic Manager, this can give very low latency for users all over the world.
 
+The app demonstrates a local read/local write scenario. The DbHelper class helps to manage the multi-master setup where there is one account per region.
+
 To test the app, do the following:
 * Create the necessary services in Azure: at least one Azure Cosmos DB account and at least one Azure Web App. Use another name than Planetsino, since it has to be unique in Azure.
 * Edit Web.config with your own EndpointURLs and AuthKeys. Also edit the preferred locations.
@@ -13,10 +15,10 @@ To test the app, do the following:
 Planetsino also contains functionality to do performance testing on your Azure Cosmos DB accounts.
 
 
-# More reading
+## More reading
 Visit [my blog](https://www.johanahlen.info/en/tag/azure-cosmos-db/) for more reading about Azure Cosmos DB
 
 
-# Screenshots
+## Screenshots
 ![Planetsino screenshot 1](/SCREENSHOT1.png?raw=true "Planetsino screenshot 1")
 ![Planetsino screenshot 2](/SCREENSHOT2.png?raw=true "Planetsino screenshot 2")
