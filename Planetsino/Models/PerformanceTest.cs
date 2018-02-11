@@ -75,7 +75,7 @@ namespace Planetsino.Models
             }
 
             WritesPrimary = await RunCreateTest("WritesPrimary", PrimaryClient, NumberOfWritesPrimary);
-            WritesSecondary = await RunCreateTest("WritesSecondary", SecondaryClient, NumberOfWritesPrimary);
+            WritesSecondary = await RunCreateTest("WritesSecondary", SecondaryClient, NumberOfWritesSecondary);
 
             QueryPrimary = await RunTest("QueryPrimary", async () => playersPrimary = await DbHelper.Query<Player>(PrimaryClient, $"TOP {NumberOfQueryResultsPrimary}", null, Player.CollectionId), NumberOfQueryResultsPrimary);
             QuerySecondary = await RunTest("QuerySecondary", async () => playersSecondary = await DbHelper.Query<Player>(SecondaryClient, $"TOP {NumberOfQueryResultsSecondary}", null, Player.CollectionId), NumberOfQueryResultsSecondary);
