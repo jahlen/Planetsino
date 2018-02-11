@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Cookie problem";
+}
+<h2>Cookie problem</h2>
+<p><img src="~/Images/joker-3114974_640.jpg" style="width: 400px;" class="img-responsive"/></p>
+<p>Oooops! There was a cookie problem. Check your cookie settings and try again.</p>
+<h3>Cookies</h3>
+@foreach (var key in Request.Cookies.AllKeys)
+{
+    <p>@key = @Request.Cookies[key].Value</p>
+}

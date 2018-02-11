@@ -16,8 +16,7 @@
 
 @using (Html.BeginForm())
 {
-    @Html.Hidden("playerGuid", Model.PlayerGuid)
-    @Html.Hidden("clientName", Model.ClientName)
+    <p>Your player id: @Model.PlayerGuid</p>
     <p>Your balance: $@Model.Balance</p>
     <p>
         <button type="submit" name="button" value="deposit" class="btn btn-success">Deposit $100</button>

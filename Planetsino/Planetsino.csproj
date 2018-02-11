@@ -161,6 +161,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Images\joker-3114974_640.jpg" />
     <Content Include="Images\piggy-bank-1056615.jpg" />
     <Content Include="Images\speed-164063_640.jpg" />
     <Content Include="Procedures\AdjustBalance.js" />
@@ -178,9 +179,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\PublishProfiles\planetsino-eastus - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\planetsino-eastus - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\planetsino-westeu - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\planetsino-westeu - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -213,6 +212,7 @@
     <Content Include="Views\Home\PerformanceTest.cshtml" />
     <Content Include="Views\Home\Diagnostics.cshtml" />
     <Content Include="Views\Home\Play.cshtml" />
+    <Content Include="Views\Home\CookieProblem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

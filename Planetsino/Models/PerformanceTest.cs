@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Azure.Documents;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -39,14 +40,14 @@ namespace Planetsino.Models
         // Test results
         public Results WritesPrimary;
         public Results WritesSecondary;
-        public Results QueryResultsPrimary;
-        public Results QueryResultsSecondary;
+        public Results QueryPrimary;
+        public Results QuerySecondary;
         public Results RandomReadsPrimary;
         public Results RandomReadsSecondary;
         public Results UpsertsPrimary;
         public Results UpsertsSecondary;
 
-        public Results[] AllResults => new[] { WritesPrimary, WritesSecondary, QueryResultsPrimary, QueryResultsSecondary, RandomReadsPrimary, RandomReadsSecondary, UpsertsPrimary, UpsertsSecondary };
+        public Results[] AllResults => new[] { WritesPrimary, WritesSecondary, QueryPrimary, QuerySecondary, RandomReadsPrimary, RandomReadsSecondary, UpsertsPrimary, UpsertsSecondary };
         
         private int counter;
         private Player[] playersPrimary;
@@ -76,8 +77,8 @@ namespace Planetsino.Models
             WritesPrimary = await RunCreateTest("WritesPrimary", PrimaryClient, NumberOfWritesPrimary);
             WritesSecondary = await RunCreateTest("WritesSecondary", SecondaryClient, NumberOfWritesPrimary);
 
-            QueryResultsPrimary = await RunTest("QueryResultsPrimary", async () => playersPrimary = await DbHelper.Query<Player>(PrimaryClient, $"TOP {NumberOfQueryResultsPrimary}", null, Player.CollectionId), NumberOfQueryResultsPrimary);
-            QueryResultsSecondary = await RunTest("QueryResultsSecondary", async () => playersSecondary = await DbHelper.Query<Player>(SecondaryClient, $"TOP {NumberOfQueryResultsSecondary}", null, Player.CollectionId), NumberOfQueryResultsSecondary);
+            QueryPrimary = await RunTest("QueryPrimary", async () => playersPrimary = await DbHelper.Query<Player>(PrimaryClient, $"TOP {NumberOfQueryResultsPrimary}", null, Player.CollectionId), NumberOfQueryResultsPrimary);
+            QuerySecondary = await RunTest("QuerySecondary", async () => playersSecondary = await DbHelper.Query<Player>(SecondaryClient, $"TOP {NumberOfQueryResultsSecondary}", null, Player.CollectionId), NumberOfQueryResultsSecondary);
 
             RandomReadsPrimary = await RunRandomReadTest("RandomReadsPrimary", PrimaryClient, NumberOfRandomReadsPrimary, playersPrimary);
             RandomReadsSecondary = await RunRandomReadTest("RandomReadsSecondary", SecondaryClient, NumberOfRandomReadsSecondary, playersSecondary);
@@ -107,14 +108,23 @@ namespace Planetsino.Models
 
             async Task Create()
             {
-                while (true)
+                try
                 {
-                    var i = System.Threading.Interlocked.Increment(ref counter);
-                    if (i > count)
-                        return;
-                    var player = Player.New();
-                    player.ClientName = client.Name;
-                    await DbHelper.Create(player, Player.CollectionId);
+                    while (true)
+                    {
+                        var i = System.Threading.Interlocked.Increment(ref counter);
+                        if (i > count)
+                            return;
+
+                        var player = Player.New();
+                        player.ClientName = client.Name;
+                        await DbHelper.Create(player, Player.CollectionId);
+                    }
+                }
+                catch (DocumentClientException ex)
+                {
+                    // If we get any DocumentClientException (for instance a RequestRateTooLargeException) - quit this task
+                    // Maybe should notify the user?
                 }
             }
         }
@@ -131,13 +141,21 @@ namespace Planetsino.Models
 
             async Task Read()
             {
-                while (true)
+                try
                 {
-                    var i = System.Threading.Interlocked.Increment(ref counter);
-                    if (i > count)
-                        return;
-                    var j = new Random(i).Next(players.Length);
-                    var player = await Player.Load(players[j].PlayerGuid, players[j].ClientName);
+                    while (true)
+                    {
+                        var i = System.Threading.Interlocked.Increment(ref counter);
+                        if (i > count)
+                            return;
+                        var j = new Random(i).Next(players.Length);
+                        var player = await Player.Load(players[j].PlayerGuid, players[j].ClientName);
+                    }
+                }
+                catch (DocumentClientException ex)
+                {
+                    // If we get any DocumentClientException (for instance a RequestRateTooLargeException) - quit this task
+                    // Maybe should notify the user?
                 }
             }
         }
@@ -154,14 +172,22 @@ namespace Planetsino.Models
 
             async Task Upsert()
             {
-                while (true)
+                try
                 {
-                    var i = System.Threading.Interlocked.Increment(ref counter);
-                    if (i > count)
-                        return;
-                    var j = new Random(i).Next(players.Length);
-                    players[j].Balance += 5;
-                    await players[j].Upsert();
+                    while (true)
+                    {
+                        var i = System.Threading.Interlocked.Increment(ref counter);
+                        if (i > count)
+                            return;
+                        var j = new Random(i).Next(players.Length);
+                        players[j].Balance += 5;
+                        await players[j].Upsert();
+                    }
+                }
+                catch (DocumentClientException ex)
+                {
+                    // If we get any DocumentClientException (for instance a RequestRateTooLargeException) - quit this task
+                    // Maybe should notify the user?
                 }
             }
         }

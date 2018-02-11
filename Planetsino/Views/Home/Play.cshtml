@@ -16,23 +16,22 @@
 
 @using (Html.BeginForm())
 {
-    @Html.Hidden("playerGuid", Model.PlayerGuid)
-    @Html.Hidden("clientName", Model.ClientName)
     <p>Your score: @Model.PlayerScore</p>
     <p>Computer score: @Model.ComputerScore</p>
     if (ViewBag.Coins != null)
     {
-        <p>Last toss:</p>
+        <h3>Your last toss</h3>
         <p>
-            @foreach (var coin in ViewBag.Coins)
+            @for (var i = 0; i < ViewBag.Coins.Length; i++)
             {
-                <img src="~/Images/coin@(coin).jpg" style="width: 100px;" />
+                <img src="~/Images/coin@(ViewBag.Coins[i]).jpg" style="width: 100px;" />
             }
         </p>
     }
 
     if (ViewBag.GameOver != null && ViewBag.GameOver == true)
     {
+        <p>Your balance: $@Model.Balance</p>
         <p>
             @if (Model.Balance >= 20)
             {

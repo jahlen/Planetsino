@@ -54,7 +54,8 @@ namespace Planetsino.Models
                 ConnectionMode = (ConnectionMode)Enum.Parse(typeof(ConnectionMode), ConfigurationManager.AppSettings["ConnectionMode"]),
                 ConnectionProtocol = (Protocol)Enum.Parse(typeof(Protocol), ConfigurationManager.AppSettings["ConnectionProtocol"]),
                 EnableEndpointDiscovery = true,
-                MaxConnectionLimit = MaxConnectionLimit
+                MaxConnectionLimit = MaxConnectionLimit,
+                RetryOptions = new RetryOptions { MaxRetryAttemptsOnThrottledRequests = 10, MaxRetryWaitTimeInSeconds = 30 }
             };
 
             foreach (var location in PreferredLocations)
@@ -167,6 +168,9 @@ namespace Planetsino.Models
 
         public static async Task<DocumentResponse<T>> Get<T>(string clientName, string key, object partitionKey, string collectionId) where T : IDocument
         {
+            if (string.IsNullOrEmpty(clientName))
+                return await Get<T>(key, partitionKey, collectionId);
+
             var uri = UriFactory.CreateDocumentUri(DatabaseId, collectionId, key);
 
             var response = await GetDocumentClientByName(clientName).ReadDocumentAsync<T>(uri, new RequestOptions { PartitionKey = new PartitionKey(partitionKey) });
