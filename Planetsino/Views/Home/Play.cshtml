@@ -1,12 +1,13 @@
-﻿@model Planetsino.Models.Player
+﻿@model Planetsino.Models.GamePlay
 @{
     ViewBag.Title = "Play";
 }
 <br />
-@if (!string.IsNullOrEmpty(ViewBag.Message))
+
+@if (!string.IsNullOrEmpty(Model.Message))
 {
     <div class="alert alert-info">
-        @Html.Raw(ViewBag.Message)
+        @Html.Raw(Model.Message)
     </div>
 }
 
@@ -16,37 +17,82 @@
 
 @using (Html.BeginForm())
 {
-    <p>Your score: @Model.PlayerScore</p>
-    <p>Computer score: @Model.ComputerScore</p>
-    if (ViewBag.Coins != null)
+    <p>
+        Your score: @Model.PlayerScore
+        @if (Model.PlayerScoreIncrease > 0)
+        {
+            <span class="label label-success"> +@Model.PlayerScoreIncrease </span>
+        }
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Computer score: @Model.ComputerScore
+        @if (Model.ComputerScoreIncrease > 0)
+        {
+            <span class="label label-danger"> +@Model.ComputerScoreIncrease </span>
+        }
+    </p>
+
+    <p>
+        Pot: @Model.Pot
+        @if (Model.PotIncrease > 0)
+        {
+            <span class="label label-success"> +@Model.PotIncrease </span>
+        }
+    </p>
+
+    if (Model.PlayerCoins.Length > 0)
     {
         <h3>Your last toss</h3>
         <p>
-            @for (var i = 0; i < ViewBag.Coins.Length; i++)
+            @for (var i = 0; i < Model.PlayerCoins.Length; i++)
             {
-                <img src="~/Images/coin@(ViewBag.Coins[i]).jpg" style="width: 100px;" />
+                <img src="~/Images/coin@(Model.PlayerCoins[i]).jpg" style="width: 80px;" />
             }
         </p>
     }
 
-    if (ViewBag.GameOver != null && ViewBag.GameOver == true)
+    if (Model.ComputerCoins.Length > 0)
     {
-        <p>Your balance: $@Model.Balance</p>
+        <h3>Computer's toss</h3>
         <p>
-            @if (Model.Balance >= 20)
+            @for (var i = 0; i < Model.ComputerCoins.Length; i++)
             {
-                @Html.ActionLink("New game", "Play", new { @Model.PlayerGuid }, new { @class = "btn btn-info" })
+                if (i >= 3 && i % 3 == 0)
+                {
+                    <text>&nbsp;&nbsp;&nbsp;&nbsp;</text>
+                }
+                <img src="~/Images/coin@(Model.ComputerCoins[i]).jpg" style="width: 80px;" />
             }
-            @Html.ActionLink("End", "Account", new { @Model.PlayerGuid }, new { @class = "btn btn-danger" })
+        </p>
+    }
+
+    if (Model.GameOver == true)
+    {
+        <p>Your balance: $@Model.Player.Balance</p>
+        <p>
+            @if (Model.Player.Balance >= 20)
+            {
+                @Html.ActionLink("New game", "Play", new { }, new { @class = "btn btn-info" })
+            }
+            @Html.ActionLink("End", "Account", new { }, new { @class = "btn btn-danger" })
         </p>
     }
     else
     {
-        <p>Pot: @Model.Pot</p>
         <p>
-            <button type="submit" name="button" value="toss" class="btn btn-success">Toss</button>
-            <button type="submit" name="button" value="call" class="btn btn-danger">Call</button>
+            @if (!Model.ComputersTurn)
+            {
+                <button type="submit" name="button" value="toss" class="btn btn-success">Toss</button>
+                if (Model.Pot > 0)
+                {
+                    <button type="submit" name="button" value="call" class="btn btn-danger">Call</button>
+                }
+            }
+            else
+            {
+                <button type="submit" name="button" value="continue" class="btn btn-success">Continue</button>
+            }
         </p>
+
         <h3>Rules</h3>
         <p>Chose between Toss and Call</p>
         <ul>

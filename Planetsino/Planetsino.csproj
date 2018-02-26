@@ -153,6 +153,7 @@
     <Compile Include="Models\DbHelper.cs" />
     <Compile Include="Models\DbClientInfo.cs" />
     <Compile Include="Models\Diagnostics.cs" />
+    <Compile Include="Models\GamePlay.cs" />
     <Compile Include="Models\IDocument.cs" />
     <Compile Include="Models\PerformanceTest.cs" />
     <Compile Include="Models\Player.cs" />

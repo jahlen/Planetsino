@@ -59,11 +59,13 @@ namespace Planetsino.Models
 
         public async Task Upsert()
         {
+            LastUpdate = DateTime.UtcNow;
             await DbHelper.Upsert(this, CollectionId);
         }
 
         public async Task Replace()
         {
+            LastUpdate = DateTime.UtcNow;
             await DbHelper.Replace(this, PlayerGuid.ToString(), CollectionId);
         }
 

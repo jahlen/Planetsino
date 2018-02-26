@@ -112,19 +112,12 @@ namespace Planetsino.Controllers
         {
             var playerGuid = GetPlayerGuid();
             if (playerGuid == Guid.Empty)
-                return RedirectToAction("CookieProblem");
-
-            var player = await Player.Load(playerGuid, GetPlayerClientName());
-            if (player.Balance < 20)
                 return RedirectToAction("");
 
-            player.Balance -= 20;
-            player.PlayerScore = 0;
-            player.ComputerScore = 0;
-            player.Pot = 0;
-            await player.Replace();
+            var game = new GamePlay();
+            await game.NewGame(playerGuid, GetPlayerClientName());
 
-            return View(player);
+            return View(game);
         }
 
         [HttpPost]
@@ -134,83 +127,12 @@ namespace Planetsino.Controllers
             if (playerGuid == Guid.Empty)
                 return RedirectToAction("CookieProblem");
 
-            var player = await Player.Load(playerGuid, GetPlayerClientName());
-            var computersTurn = false;
-            var gameOver = false;
-            var rand = new Random();
-            int[] Toss() => new[] { rand.Next(2), rand.Next(2), rand.Next(2) };
+            var game = new GamePlay();
+            await game.Play(playerGuid, GetPlayerClientName(), button);
+            if (game.Player.PlayerGuid == Guid.Empty)
+                return RedirectToAction("CookieProblem");
 
-            switch (button.ToLower())
-            {
-                case "toss":
-                    var coins = Toss();
-                    int sum = coins.Sum();
-                    ViewBag.Coins = coins;
-                    if (sum == 0)
-                    {
-                        player.Pot = 0;
-                        ViewBag.Message = "You lost the pot.";
-                        computersTurn = true;
-                    }
-                    else
-                    {
-                        player.Pot += sum;
-                        ViewBag.Message = $"Pot increased by {sum}";
-                    }
-                    break;
-                case "call":
-                    if (player.Pot == 0)
-                    {
-                        ViewBag.Message = "You cannot Call when the pot is empty.";
-                        return View(player);
-                    }
-
-                    player.PlayerScore += player.Pot;
-                    ViewBag.Message = $"You call. The pot, {player.Pot}, has been added to your score.";
-                    player.Pot = 0;
-                    computersTurn = true;
-                    break;
-            }
-
-            if (player.PlayerScore >= 25)
-            {
-                ViewBag.Message += "<br/>You win!";
-                player.Balance += 40;
-                computersTurn = false;
-                gameOver = true;
-            }
-
-            if (computersTurn)
-            {
-                var pot = 0;
-                do
-                {
-                    var coins = Toss();
-                    var sum = coins.Sum();
-                    if (sum == 0)
-                    {
-                        pot = 0;
-                        break;
-                    }
-
-                    pot += sum;
-                } while (pot < 4); // Computer will toss again if pot is less than 4
-
-                ViewBag.Message += $"<br/>The computer earned {pot}.";
-                player.ComputerScore += pot;
-            }
-
-            if (player.ComputerScore >= 25)
-            {
-                ViewBag.Message += "<br/>The computer wins!";
-                gameOver = true;
-            }
-
-            await player.Replace();
-
-            ViewBag.GameOver = gameOver;
-
-            return View(player);
+            return View(game);
         }
 
         [HttpGet]
